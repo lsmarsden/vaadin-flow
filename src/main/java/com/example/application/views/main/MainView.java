@@ -1,6 +1,5 @@
 package com.example.application.views.main;
 
-import com.example.application.views.task.TaskView;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -9,53 +8,59 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
+import lombok.AccessLevel;
+import lombok.Getter;
+import org.springframework.beans.factory.InitializingBean;
 
 @Route("")
-public class MainView extends VerticalLayout {
+public class MainView extends VerticalLayout implements InitializingBean {
 
-    public MainView() {
-        VerticalLayout todosList = new VerticalLayout();
-        TextField taskField = new TextField();
+    private final H1 title = new H1("Vaadin Todo");
+
+    @Getter(AccessLevel.PACKAGE)
+    private final VerticalLayout todosList = new VerticalLayout();
+    @Getter(AccessLevel.PACKAGE)
+    private final Button addButton = new Button("Add");
+
+    @Getter(AccessLevel.PACKAGE)
+    private final TextField taskField = new TextField();
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        todosList.setId("todoList");
+
         taskField.setId("todoField");
-        Button addButton = new Button("Add");
+        taskField.setClearButtonVisible(true);
+
         addButton.setId("addTodoButton");
-        addButton.addClickListener(click -> {
-            if (taskField.isEmpty()) {
-                return;
-            }
-
-            HorizontalLayout taskLayout = createTaskLayout(taskField.getValue());
-
-            todosList.add(taskLayout);
-            todosList.setId("todoList");
-            taskField.clear();
-            taskField.focus();
-        });
+        addButton.addClickListener(click -> addTaskToList());
+        //TODO: untested - figure out how to validate click shortcuts added
         addButton.addClickShortcut(Key.ENTER);
 
         add(
-                new H1("Vaadin Todo"),
+                title,
                 todosList,
                 new HorizontalLayout(
                         taskField,
                         addButton
                 )
         );
-        add(new RouterLink("Somewhere else", NewView.class));
     }
 
-    private HorizontalLayout createTaskLayout(String text) {
-        HorizontalLayout layout = new HorizontalLayout();
+    private void addTaskToList() {
 
-        Checkbox checkbox = new Checkbox(text);
-        checkbox.setClassName("todoItem");
-        RouterLink link = createTaskRouterLink();
-        layout.add(checkbox, link);
-        return layout;
+        if (taskField.isEmpty()) {
+            return;
+        }
+
+        Checkbox task = new Checkbox(taskField.getValue());
+        task.setClassName("todoItem");
+        todosList.add(task);
+
+        taskField.clear();
+        //TODO: untested - figure out how to validate focus called - probably mock?
+        taskField.focus();
     }
 
-    private RouterLink createTaskRouterLink() {
-        return new RouterLink("View task", TaskView.class);
-    }
+
 }
