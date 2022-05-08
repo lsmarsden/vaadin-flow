@@ -5,6 +5,8 @@
 .project
 .classpath
 
+rebel.xml
+
 *.iml
 .DS_Store
 
