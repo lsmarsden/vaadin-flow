@@ -1,13 +1,12 @@
 package com.example.application.views.main;
 
-import com.example.application.views.main.MainView;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,11 +15,15 @@ class MainViewTest {
 
     private MainView underTest = new MainView();
 
-    @Test
-    void afterPropertiesSet() throws Exception {
-
-        // exercise
+    @BeforeEach
+    void setup() throws Exception {
         underTest.afterPropertiesSet();
+    }
+
+    @Test
+    void afterPropertiesSet() {
+
+        // exercise - afterPropertiesSet() called in setup()
 
         // verify
         int componentCount = 0;
