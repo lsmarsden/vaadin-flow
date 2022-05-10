@@ -1,29 +1,23 @@
 package com.example.application.views.main;
 
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
+import com.example.application.views.task.TodoList;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest(classes = {MainView.class, TodoList.class})
 class MainViewTest {
 
-    private MainView underTest = new MainView();
-
-    @BeforeEach
-    void setup() throws Exception {
-        underTest.afterPropertiesSet();
-    }
+    @Autowired
+    private MainView underTest;
 
     @Test
-    void afterPropertiesSet() {
+    void afterPropertiesSet() throws Exception {
 
-        // exercise - afterPropertiesSet() called in setup()
+        // exercise - afterPropertiesSet() called in initialization
 
         // verify
         int componentCount = 0;
@@ -31,60 +25,7 @@ class MainViewTest {
         H1 title = (H1) underTest.getComponentAt(componentCount++);
         assertEquals("Vaadin Todo", title.getText());
 
-        VerticalLayout todosList = (VerticalLayout) underTest.getComponentAt(componentCount++);
-        assertEquals("todoList", todosList.getId().get());
-
-        HorizontalLayout taskLayout = (HorizontalLayout) underTest.getComponentAt(componentCount++);
-
-        int layoutComponentCount = 0;
-        TextField taskField = (TextField) taskLayout.getComponentAt(layoutComponentCount++);
-        assertEquals("todoField", taskField.getId().get());
-        assertTrue(taskField.isEmpty());
-        assertTrue(taskField.isClearButtonVisible());
-
-        Button addButton = (Button) taskLayout.getComponentAt(layoutComponentCount++);
-        assertEquals("addTodoButton", addButton.getId().get());
-        assertEquals("Add", addButton.getText());
-
-        assertEquals(underTest.getComponentCount(), componentCount);
-    }
-
-    @Test
-    void addEmptyTaskToListShouldNotAdd() {
-
-        // set up
-        underTest.getTaskField().clear();
-
-        // exercise
-        underTest.getAddButton().click();
-
-        // verify
-        assertEquals(0, underTest.getTodosList().getComponentCount());
-    }
-
-    @Test
-    void addTaskShouldAddToTaskListAndClearTaskField() {
-
-        // set up
-        VerticalLayout todosList = underTest.getTodosList();
-
-        TextField taskField = underTest.getTaskField();
-        Button addButton = underTest.getAddButton();
-        assertEquals(0, todosList.getComponentCount());
-
-        taskField.setValue("Task to add");
-
-        // exercise
-        addButton.click();
-
-        // verify
-        assertEquals(1, todosList.getComponentCount());
-
-        Checkbox task = (Checkbox) todosList.getComponentAt(0);
-        assertEquals("todoItem", task.getClassName());
-        assertEquals("Task to add", task.getLabel());
-        assertFalse(task.getValue());
-
-        assertTrue(taskField.isEmpty());
+        TodoList todoList = (TodoList) underTest.getComponentAt(componentCount++);
+        assertEquals("todoList", todoList.getId().get());
     }
 }
