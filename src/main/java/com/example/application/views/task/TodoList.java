@@ -6,16 +6,16 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Component
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-    @Getter(AccessLevel.PACKAGE)
+@Getter(AccessLevel.PACKAGE)
 public class TodoList extends VerticalLayout implements InitializingBean {
     private final Button addButton = new Button("Add");
 
